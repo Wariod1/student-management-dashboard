@@ -1,4 +1,14 @@
-function StudentList({ students }) {
+function StudentList({ students, deleteStudent }) {
+  function handleDelete(student) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${student.fullName}?`
+    );
+
+    if (confirmed) {
+      deleteStudent(student.id);
+    }
+  }
+
   return (
     <div className="student-list">
       <h2>Registered Students</h2>
@@ -17,21 +27,21 @@ function StudentList({ students }) {
             </tr>
           </thead>
           <tbody>
-  {students.map((student) => (
-    <tr key={student.id}>
-      <td>{student.id}</td>
-      <td>{student.fullName}</td>
-      <td>{student.email}</td>
-      <td>{student.course}</td>
-      <td>{student.year}</td>
-      <td>{student.registrationDate}</td>
-      <td>
-    <button>Edit </button>
-    <button> Delete</button>
-</td>
-    </tr>
-  ))}
-</tbody>
+            {students.map((student) => (
+              <tr key={student.id}>
+                <td>{student.id}</td>
+                <td>{student.fullName}</td>
+                <td>{student.email}</td>
+                <td>{student.course}</td>
+                <td>{student.year}</td>
+                <td>{student.registrationDate}</td>
+                <td>
+                  <button>Edit</button>
+                  <button onClick={() => handleDelete(student)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>

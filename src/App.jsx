@@ -2,7 +2,7 @@ import { useState } from "react";
 import Dashboard from "./components/Dashboard";
 
 function App() {
-  const [students] = useState([
+  const [students, setStudents] = useState([
     {
       id: "STU001",
       fullName: "Amina Hassan",
@@ -21,7 +21,24 @@ function App() {
     },
   ]);
 
-  return <Dashboard students={students} />;
+  function addStudent(newStudent) {
+    setStudents([...students, newStudent]);
+  }
+
+  function deleteStudent(studentId) {
+    const updatedStudents = students.filter(
+      (student) => student.id !== studentId
+    );
+    setStudents(updatedStudents);
+  }
+
+  return (
+    <Dashboard
+      students={students}
+      addStudent={addStudent}
+      deleteStudent={deleteStudent}
+    />
+  );
 }
 
 export default App;
