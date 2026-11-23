@@ -1,27 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
 
-function App() {
-  const [students, setStudents] = useState([
-    {
-      id: "STU001",
-      fullName: "Amina Hassan",
-      email: "amina@example.com",
-      course: "Computer Science",
-      year: 2,
-      registrationDate: "2026-09-01",
-    },
-    {
-      id: "STU002",
-      fullName: "Brian Otieno",
-      email: "brian@example.com",
-      course: "Business",
-      year: 1,
-      registrationDate: "2026-09-03",
-    },
-  ]);
+const defaultStudents = [
+  {
+    id: "STU001",
+    fullName: "Amina Hassan",
+    email: "amina@example.com",
+    course: "Computer Science",
+    year: 2,
+    registrationDate: "2026-09-01",
+  },
+  {
+    id: "STU002",
+    fullName: "Brian Otieno",
+    email: "brian@example.com",
+    course: "Business",
+    year: 1,
+    registrationDate: "2026-09-03",
+  },
+];
 
+function loadStudents() {
+  const saved = localStorage.getItem("students");
+
+  if (saved) {
+    return JSON.parse(saved);
+  }
+
+  return defaultStudents;
+}
+
+function App() {
+  const [students, setStudents] = useState(loadStudents);
   const [editingStudent, setEditingStudent] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("students", JSON.stringify(students));
+  }, [students]);
 
   function addStudent(newStudent) {
     setStudents([...students, newStudent]);
