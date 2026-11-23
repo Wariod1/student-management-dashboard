@@ -36,6 +36,7 @@ function Dashboard({
       </div>
 
       <StudentForm
+        students={students}
         addStudent={addStudent}
         updateStudent={updateStudent}
         editingStudent={editingStudent}

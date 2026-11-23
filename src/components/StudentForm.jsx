@@ -10,12 +10,14 @@ const emptyForm = {
 };
 
 function StudentForm({
+  students,
   addStudent,
   updateStudent,
   editingStudent,
   setEditingStudent,
 }) {
   const [formData, setFormData] = useState(emptyForm);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (editingStudent) {
@@ -23,6 +25,7 @@ function StudentForm({
     } else {
       setFormData(emptyForm);
     }
+    setErrors({});
   }, [editingStudent]);
 
   function handleChange(e) {
@@ -32,11 +35,61 @@ function StudentForm({
     });
   }
 
+  function validate() {
+    const newErrors = {};
+
+    if (formData.id.trim() === "") {
+      newErrors.id = "Student ID is required.";
+    } else if (
+      !editingStudent &&
+      students.some(
+        (student) =>
+          student.id.toLowerCase() === formData.id.trim().toLowerCase()
+      )
+    ) {
+      newErrors.id = "This Student ID already exists.";
+    }
+
+    if (formData.fullName.trim() === "") {
+      newErrors.fullName = "Full name is required.";
+    }
+
+    if (formData.email.trim() === "") {
+      newErrors.email = "Email is required.";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email.trim())) {
+      newErrors.email = "Enter a valid email address.";
+    }
+
+    if (formData.course === "") {
+      newErrors.course = "Please select a course.";
+    }
+
+    if (formData.year === "") {
+      newErrors.year = "Please select a year of study.";
+    }
+
+    if (formData.registrationDate === "") {
+      newErrors.registrationDate = "Registration date is required.";
+    }
+
+    return newErrors;
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
 
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
     const studentData = {
       ...formData,
+      id: formData.id.trim(),
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
       year: Number(formData.year),
     };
 
@@ -52,10 +105,11 @@ function StudentForm({
   function handleCancel() {
     setEditingStudent(null);
     setFormData(emptyForm);
+    setErrors({});
   }
 
   return (
-    <form className="student-form" onSubmit={handleSubmit}>
+    <form className="student-form" onSubmit={handleSubmit} noValidate>
       <h2>{editingStudent ? "Edit Student" : "Register Student"}</h2>
 
       <label>
@@ -68,6 +122,7 @@ function StudentForm({
           onChange={handleChange}
           disabled={editingStudent !== null}
         />
+        {errors.id && <span className="error">{errors.id}</span>}
       </label>
 
       <label>
@@ -79,6 +134,7 @@ function StudentForm({
           value={formData.fullName}
           onChange={handleChange}
         />
+        {errors.fullName && <span className="error">{errors.fullName}</span>}
       </label>
 
       <label>
@@ -90,6 +146,7 @@ function StudentForm({
           value={formData.email}
           onChange={handleChange}
         />
+        {errors.email && <span className="error">{errors.email}</span>}
       </label>
 
       <label>
@@ -101,6 +158,7 @@ function StudentForm({
           <option>Business</option>
           <option>Engineering</option>
         </select>
+        {errors.course && <span className="error">{errors.course}</span>}
       </label>
 
       <label>
@@ -112,6 +170,7 @@ function StudentForm({
           <option value="3">Year 3</option>
           <option value="4">Year 4</option>
         </select>
+        {errors.year && <span className="error">{errors.year}</span>}
       </label>
 
       <label>
@@ -122,6 +181,9 @@ function StudentForm({
           value={formData.registrationDate}
           onChange={handleChange}
         />
+        {errors.registrationDate && (
+          <span className="error">{errors.registrationDate}</span>
+        )}
       </label>
 
       <button type="submit">
