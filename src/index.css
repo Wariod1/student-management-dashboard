@@ -88,3 +88,25 @@ input:disabled {
   background: #e5e7eb;
   cursor: not-allowed;
 }
+.controls {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  flex: 2;
+  min-width: 220px;
+}
+
+.course-filter {
+  flex: 1;
+  min-width: 180px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
