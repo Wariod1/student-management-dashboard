@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
 
+function getToday() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const emptyForm = {
   id: "",
   fullName: "",
@@ -70,6 +78,8 @@ function StudentForm({
 
     if (formData.registrationDate === "") {
       newErrors.registrationDate = "Registration date is required.";
+    } else if (formData.registrationDate > getToday()) {
+      newErrors.registrationDate = "Registration date cannot be in the future.";
     }
 
     return newErrors;
@@ -180,6 +190,7 @@ function StudentForm({
           name="registrationDate"
           value={formData.registrationDate}
           onChange={handleChange}
+          max={getToday()}
         />
         {errors.registrationDate && (
           <span className="error">{errors.registrationDate}</span>
