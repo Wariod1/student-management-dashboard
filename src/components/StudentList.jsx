@@ -1,4 +1,4 @@
-function StudentList({ students, deleteStudent }) {
+function StudentList({ students, deleteStudent, setEditingStudent }) {
   function handleDelete(student) {
     const confirmed = window.confirm(
       `Are you sure you want to delete ${student.fullName}?`
@@ -36,7 +36,9 @@ function StudentList({ students, deleteStudent }) {
                 <td>{student.year}</td>
                 <td>{student.registrationDate}</td>
                 <td>
-                  <button>Edit</button>
+                  <button onClick={() => setEditingStudent(student)}>
+                    Edit
+                  </button>
                   <button onClick={() => handleDelete(student)}>Delete</button>
                 </td>
               </tr>

@@ -1,14 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function StudentForm({ addStudent }) {
-  const [formData, setFormData] = useState({
-    id: "",
-    fullName: "",
-    email: "",
-    course: "",
-    year: "",
-    registrationDate: "",
-  });
+const emptyForm = {
+  id: "",
+  fullName: "",
+  email: "",
+  course: "",
+  year: "",
+  registrationDate: "",
+};
+
+function StudentForm({
+  addStudent,
+  updateStudent,
+  editingStudent,
+  setEditingStudent,
+}) {
+  const [formData, setFormData] = useState(emptyForm);
+
+  useEffect(() => {
+    if (editingStudent) {
+      setFormData(editingStudent);
+    } else {
+      setFormData(emptyForm);
+    }
+  }, [editingStudent]);
 
   function handleChange(e) {
     setFormData({
@@ -20,24 +35,28 @@ function StudentForm({ addStudent }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    addStudent({
+    const studentData = {
       ...formData,
       year: Number(formData.year),
-    });
+    };
 
-    setFormData({
-      id: "",
-      fullName: "",
-      email: "",
-      course: "",
-      year: "",
-      registrationDate: "",
-    });
+    if (editingStudent) {
+      updateStudent(studentData);
+    } else {
+      addStudent(studentData);
+    }
+
+    setFormData(emptyForm);
+  }
+
+  function handleCancel() {
+    setEditingStudent(null);
+    setFormData(emptyForm);
   }
 
   return (
     <form className="student-form" onSubmit={handleSubmit}>
-      <h2>Register Student</h2>
+      <h2>{editingStudent ? "Edit Student" : "Register Student"}</h2>
 
       <label>
         Student ID
@@ -47,6 +66,7 @@ function StudentForm({ addStudent }) {
           placeholder="e.g. STU003"
           value={formData.id}
           onChange={handleChange}
+          disabled={editingStudent !== null}
         />
       </label>
 
@@ -104,7 +124,15 @@ function StudentForm({ addStudent }) {
         />
       </label>
 
-      <button type="submit">Add Student</button>
+      <button type="submit">
+        {editingStudent ? "Update Student" : "Add Student"}
+      </button>
+
+      {editingStudent && (
+        <button type="button" className="cancel-btn" onClick={handleCancel}>
+          Cancel
+        </button>
+      )}
     </form>
   );
 }

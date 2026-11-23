@@ -79,3 +79,12 @@ td {
 td button {
   margin-right: 6px;
 }
+.cancel-btn {
+  grid-column: 1 / -1;
+  background: #6b7280;
+}
+
+input:disabled {
+  background: #e5e7eb;
+  cursor: not-allowed;
+}

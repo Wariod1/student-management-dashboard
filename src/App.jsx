@@ -21,6 +21,8 @@ function App() {
     },
   ]);
 
+  const [editingStudent, setEditingStudent] = useState(null);
+
   function addStudent(newStudent) {
     setStudents([...students, newStudent]);
   }
@@ -32,11 +34,22 @@ function App() {
     setStudents(updatedStudents);
   }
 
+  function updateStudent(updatedStudent) {
+    const updatedStudents = students.map((student) =>
+      student.id === updatedStudent.id ? updatedStudent : student
+    );
+    setStudents(updatedStudents);
+    setEditingStudent(null);
+  }
+
   return (
     <Dashboard
       students={students}
       addStudent={addStudent}
       deleteStudent={deleteStudent}
+      updateStudent={updateStudent}
+      editingStudent={editingStudent}
+      setEditingStudent={setEditingStudent}
     />
   );
 }
