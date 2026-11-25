@@ -30,13 +30,34 @@ function loadStudents() {
   return defaultStudents;
 }
 
+function loadTheme() {
+  const saved = localStorage.getItem("theme");
+
+  if (saved === "light" || saved === "dark") {
+    return saved;
+  }
+
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  return prefersDark ? "dark" : "light";
+}
+
 function App() {
   const [students, setStudents] = useState(loadStudents);
   const [editingStudent, setEditingStudent] = useState(null);
+  const [theme, setTheme] = useState(loadTheme);
 
   useEffect(() => {
     localStorage.setItem("students", JSON.stringify(students));
   }, [students]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme(theme === "light" ? "dark" : "light");
+  }
 
   function addStudent(newStudent) {
     setStudents([...students, newStudent]);
@@ -65,6 +86,8 @@ function App() {
       updateStudent={updateStudent}
       editingStudent={editingStudent}
       setEditingStudent={setEditingStudent}
+      theme={theme}
+      toggleTheme={toggleTheme}
     />
   );
 }
