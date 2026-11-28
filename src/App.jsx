@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
+import Login from "./components/Login";
+
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "admin123";
 
 const defaultStudents = [
   {
@@ -41,10 +45,15 @@ function loadTheme() {
   return prefersDark ? "dark" : "light";
 }
 
+function loadLoggedIn() {
+  return sessionStorage.getItem("isLoggedIn") === "true";
+}
+
 function App() {
   const [students, setStudents] = useState(loadStudents);
   const [editingStudent, setEditingStudent] = useState(null);
   const [theme, setTheme] = useState(loadTheme);
+  const [isLoggedIn, setIsLoggedIn] = useState(loadLoggedIn);
 
   useEffect(() => {
     localStorage.setItem("students", JSON.stringify(students));
@@ -54,6 +63,23 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    sessionStorage.setItem("isLoggedIn", String(isLoggedIn));
+  }, [isLoggedIn]);
+
+  function handleLogin(username, password) {
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      setIsLoggedIn(true);
+      return true;
+    }
+    return false;
+  }
+
+  function handleLogout() {
+    setIsLoggedIn(false);
+    setEditingStudent(null);
+  }
 
   function toggleTheme() {
     setTheme(theme === "light" ? "dark" : "light");
@@ -78,6 +104,10 @@ function App() {
     setEditingStudent(null);
   }
 
+  if (!isLoggedIn) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
     <Dashboard
       students={students}
@@ -88,6 +118,7 @@ function App() {
       setEditingStudent={setEditingStudent}
       theme={theme}
       toggleTheme={toggleTheme}
+      onLogout={handleLogout}
     />
   );
 }

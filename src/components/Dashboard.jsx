@@ -13,6 +13,7 @@ function Dashboard({
   setEditingStudent,
   theme,
   toggleTheme,
+  onLogout,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -33,9 +34,14 @@ function Dashboard({
     <div className="container">
       <div className="top-bar">
         <h1>Student Management Dashboard</h1>
-        <button type="button" className="theme-toggle" onClick={toggleTheme}>
-          {theme === "light" ? "🌙 Dark mode" : "☀️ Light mode"}
-        </button>
+        <div className="top-actions">
+          <button type="button" className="theme-toggle" onClick={toggleTheme}>
+            {theme === "light" ? "🌙 Dark mode" : "☀️ Light mode"}
+          </button>
+          <button type="button" className="logout-btn" onClick={onLogout}>
+            Log out
+          </button>
+        </div>
       </div>
 
       <div className="summary">
